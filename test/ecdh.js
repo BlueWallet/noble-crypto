@@ -7,8 +7,8 @@ var mods = [
 	'prime192v1'
 ];
 var test = require('tape');
-var createECDH1 = require('../').createECDH;
-var createECDH2 = require('create-ecdh/browser');
+var createECDH1 = require('../noble-ecdh-wrapper');
+var createECDH2 = require('../noble-ecdh-wrapper');
 
 mods.forEach(function (mod) {
 	test('createECDH: ' + mod + ' uncompressed', function (t) {

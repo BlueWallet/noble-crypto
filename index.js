@@ -55,7 +55,7 @@ exports.Sign = sign.Sign;
 exports.createVerify = sign.createVerify;
 exports.Verify = sign.Verify;
 
-exports.createECDH = require('create-ecdh');
+exports.createECDH = require('./noble-ecdh-wrapper');
 
 var publicEncrypt = require('public-encrypt');
 
