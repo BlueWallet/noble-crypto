@@ -27,7 +27,6 @@
 		"create-ecdh": "^4.0.4",
 		"diffie-hellman": "^5.0.3",
 		"public-encrypt": "^4.0.3",
-		"randombytes": "^2.1.0",
 		"randomfill": "^1.0.4"
 	},
 	"devDependencies": {

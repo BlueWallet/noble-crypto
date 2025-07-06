@@ -1,7 +1,9 @@
 'use strict';
 
 // eslint-disable-next-line no-multi-assign
-exports.randomBytes = exports.rng = exports.pseudoRandomBytes = exports.prng = require('randombytes');
+exports.randomBytes = exports.rng = exports.pseudoRandomBytes = exports.prng = function () {
+	throw new Error('Deprecated. Use Crypto.getRandomValues() - bring your own implementation for your runtime');
+};
 
 // eslint-disable-next-line no-multi-assign
 exports.createHash = exports.Hash = require('./noble-hash-wrapper');

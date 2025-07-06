@@ -1,3 +1,7 @@
+## Incompatibilities
+
+* `randomBytes` is removed and will throw an exception. Bring your own CSPRNG for your runtime
+
 # crypto-browserify <sup>[![Version Badge][npm-version-svg]][package-url]</sup>
 
 A port of node's `crypto` module to the browser.
