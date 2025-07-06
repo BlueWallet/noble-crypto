@@ -4,8 +4,7 @@ var secp256k1 = require('@noble/curves/secp256k1');
 var nist = require('@noble/curves/nist');
 var Buffer = require('safe-buffer').Buffer;
 
-// Fallback to create-ecdh for unsupported curves and hybrid format
-var createEcdhFallback = require('create-ecdh');
+// Fallback to create-ecdh/browser for unsupported curves and hybrid format
 var createEcdhBrowser = require('create-ecdh/browser');
 
 // Curve name mapping
@@ -19,8 +18,8 @@ var curveMap = {
 function ECDH(curveName) {
 	// Fallback for secp224r1 and prime192v1
 	if (curveName === 'secp224r1' || curveName === 'prime192v1') {
-		// Use create-ecdh fallback for secp224r1 and prime192v1
-		return createEcdhFallback(curveName);
+		// Use create-ecdh/browser fallback for secp224r1 and prime192v1
+		return createEcdhBrowser(curveName);
 	}
 	if (!curveMap[curveName]) {
 		throw new Error('Unsupported curve: ' + curveName);
