@@ -29,7 +29,7 @@ var p = require('./noble-pbkdf2-wrapper');
 exports.pbkdf2 = p.pbkdf2;
 exports.pbkdf2Sync = p.pbkdf2Sync;
 
-var aes = require('browserify-cipher');
+var aes = require('./noble-cipher-wrapper');
 
 exports.Cipher = aes.Cipher;
 exports.createCipher = aes.createCipher;
