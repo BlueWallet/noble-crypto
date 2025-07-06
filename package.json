@@ -24,6 +24,7 @@
 	},
 	"dependencies": {
 		"@noble/ciphers": "^1.3.0",
+		"@noble/curves": "^1.9.2",
 		"@noble/hashes": "^1.8.0",
 		"browserify-sign": "^4.2.3",
 		"create-ecdh": "^4.0.4",

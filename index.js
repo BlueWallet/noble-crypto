@@ -9,8 +9,6 @@ exports.createHash = exports.Hash = require('./noble-hash-wrapper');
 // eslint-disable-next-line no-multi-assign
 exports.createHmac = exports.Hmac = require('./noble-hmac-wrapper');
 
-var algos = require('browserify-sign/algos');
-var algoKeys = Object.keys(algos);
 var hashes = [
 	'sha1',
 	'sha224',
@@ -19,7 +17,7 @@ var hashes = [
 	'sha512',
 	'md5',
 	'rmd160'
-].concat(algoKeys);
+];
 
 exports.getHashes = function () {
 	return hashes;
@@ -50,7 +48,7 @@ exports.getDiffieHellman = dh.getDiffieHellman;
 exports.createDiffieHellman = dh.createDiffieHellman;
 exports.DiffieHellman = dh.DiffieHellman;
 
-var sign = require('browserify-sign');
+var sign = require('./noble-sign-wrapper');
 
 exports.createSign = sign.createSign;
 exports.Sign = sign.Sign;
