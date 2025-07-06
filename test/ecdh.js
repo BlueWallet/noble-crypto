@@ -2,9 +2,9 @@
 
 var mods = [
 	'secp256k1',
-	'secp224r1',
-	'prime256v1',
-	'prime192v1'
+	// 'secp224r1', // not supported in noble
+	'prime256v1'
+	// 'prime192v1' // not supported in noble
 ];
 var test = require('tape');
 var createECDH1 = require('../noble-ecdh-wrapper');
@@ -40,7 +40,7 @@ mods.forEach(function (mod) {
 	});
 
 	test('createECDH: ' + mod + ' set stuff', function (t) {
-		t.plan(5);
+		t.plan(4);
 		var dh1 = createECDH1(mod);
 		var dh2 = createECDH2(mod);
 		dh1.generateKeys();
@@ -54,7 +54,8 @@ mods.forEach(function (mod) {
 		var pubk2 = dh2.getPublicKey();
 		t.equals(pubk1.toString('hex'), pubk2.toString('hex'), 'same public keys, uncompressed');
 		t.equals(dh1.getPublicKey('hex', 'compressed'), dh2.getPublicKey('hex', 'compressed'), 'same public keys compressed');
-		t.equals(dh1.getPublicKey('hex', 'hybrid'), dh2.getPublicKey('hex', 'hybrid'), 'same public keys hybrid');
+		// not supported in noble
+		// t.equals(dh1.getPublicKey('hex', 'hybrid'), dh2.getPublicKey('hex', 'hybrid'), 'same public keys hybrid');
 		var pub1 = dh1.computeSecret(pubk2).toString('hex');
 		var pub2 = dh2.computeSecret(pubk1).toString('hex');
 		t.equals(pub1, pub2, 'equal secrets');

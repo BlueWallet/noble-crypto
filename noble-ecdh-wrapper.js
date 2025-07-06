@@ -4,23 +4,16 @@ var secp256k1 = require('@noble/curves/secp256k1');
 var nist = require('@noble/curves/nist');
 var Buffer = require('safe-buffer').Buffer;
 
-// Fallback to create-ecdh/browser for unsupported curves and hybrid format
-var createEcdhBrowser = require('create-ecdh/browser');
-
 // Curve name mapping
 var curveMap = {
 	secp256k1: secp256k1.secp256k1,
-	secp224r1: null, // Will fallback to create-ecdh
+	secp224r1: null, // Not available in noble
 	prime256v1: nist.p256,
 	prime192v1: null // Not available in noble
 };
 
 function ECDH(curveName) {
-	// Fallback for secp224r1 and prime192v1
-	if (curveName === 'secp224r1' || curveName === 'prime192v1') {
-		// Use create-ecdh/browser fallback for secp224r1 and prime192v1
-		return createEcdhBrowser(curveName);
-	}
+
 	if (!curveMap[curveName]) {
 		throw new Error('Unsupported curve: ' + curveName);
 	}
@@ -51,11 +44,9 @@ ECDH.prototype.getPublicKey = function (encoding, format) {
 		throw new Error('Public key not set');
 	}
 
-	// Fallback for hybrid format
 	if (format === 'hybrid') {
-		// Use create-ecdh/browser fallback for hybrid format
-		// This is required because noble-curves does not support hybrid format
-		return createEcdhBrowser(this.curveName).setPrivateKey(this.getPrivateKey()).getPublicKey(encoding, format);
+		// noble-curves does not support hybrid format
+		throw new Error('Unsupported format: ' + format);
 	}
 
 	var key;
