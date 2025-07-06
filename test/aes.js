@@ -1,7 +1,7 @@
 'use strict';
 
 var test = require('tape');
-var bcCrypto = require('browserify-cipher/browser');
+var bcCrypto = require('../noble-cipher-wrapper');
 var bcCyphers = bcCrypto.getCiphers();
 var randomBytes = require('pseudorandombytes');
 
