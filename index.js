@@ -4,7 +4,7 @@
 exports.randomBytes = exports.rng = exports.pseudoRandomBytes = exports.prng = require('randombytes');
 
 // eslint-disable-next-line no-multi-assign
-exports.createHash = exports.Hash = require('create-hash');
+exports.createHash = exports.Hash = require('./noble-hash-wrapper');
 
 // eslint-disable-next-line no-multi-assign
 exports.createHmac = exports.Hmac = require('create-hmac');

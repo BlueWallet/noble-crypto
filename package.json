@@ -23,10 +23,10 @@
 		"node": ">= 0.10"
 	},
 	"dependencies": {
+		"@noble/hashes": "^1.8.0",
 		"browserify-cipher": "^1.0.1",
 		"browserify-sign": "^4.2.3",
 		"create-ecdh": "^4.0.4",
-		"create-hash": "^1.2.0",
 		"create-hmac": "^1.1.7",
 		"diffie-hellman": "^5.0.3",
 		"hash-base": "~3.0.4",
