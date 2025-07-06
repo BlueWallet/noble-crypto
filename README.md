@@ -2,6 +2,7 @@
 
 * `randomBytes` is removed and will throw an exception. Bring your own CSPRNG for your runtime
 * `randomfill`
+* `createSign()` & `createVerify()` are carved out (could not get noble to work with it)
 
 # crypto-browserify <sup>[![Version Badge][npm-version-svg]][package-url]</sup>
 
