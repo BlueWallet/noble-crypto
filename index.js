@@ -7,7 +7,7 @@ exports.randomBytes = exports.rng = exports.pseudoRandomBytes = exports.prng = r
 exports.createHash = exports.Hash = require('./noble-hash-wrapper');
 
 // eslint-disable-next-line no-multi-assign
-exports.createHmac = exports.Hmac = require('create-hmac');
+exports.createHmac = exports.Hmac = require('./noble-hmac-wrapper');
 
 var algos = require('browserify-sign/algos');
 var algoKeys = Object.keys(algos);

@@ -27,7 +27,6 @@
 		"browserify-cipher": "^1.0.1",
 		"browserify-sign": "^4.2.3",
 		"create-ecdh": "^4.0.4",
-		"create-hmac": "^1.1.7",
 		"diffie-hellman": "^5.0.3",
 		"hash-base": "~3.0.4",
 		"inherits": "^2.0.4",
