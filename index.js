@@ -25,7 +25,7 @@ exports.getHashes = function () {
 	return hashes;
 };
 
-var p = require('pbkdf2');
+var p = require('./noble-pbkdf2-wrapper');
 exports.pbkdf2 = p.pbkdf2;
 exports.pbkdf2Sync = p.pbkdf2Sync;
 
