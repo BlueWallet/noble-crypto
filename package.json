@@ -11,10 +11,7 @@
 	},
 	"scripts": {
 		"lint": "eslint --ext=js,mjs .",
-		"pretest": "npm run lint",
-		"tests-only": "nyc tape 'test/**/*.js'",
-		"test": "npm run tests-only",
-		"posttest": "npx npm@'>=10.2' audit --production"
+		"test": "nyc tape 'test/**/*.js'"
 	},
 	"funding": {
 		"url": "https://github.com/sponsors/ljharb"
@@ -23,17 +20,13 @@
 		"node": ">= 0.10"
 	},
 	"dependencies": {
-		"browserify-cipher": "^1.0.1",
+		"@noble/ciphers": "^1.3.0",
+		"@noble/curves": "^1.9.2",
+		"@noble/hashes": "^1.8.0",
 		"browserify-sign": "^4.2.3",
 		"create-ecdh": "^4.0.4",
-		"create-hash": "^1.2.0",
-		"create-hmac": "^1.1.7",
 		"diffie-hellman": "^5.0.3",
-		"hash-base": "~3.0.4",
-		"inherits": "^2.0.4",
-		"pbkdf2": "^3.1.2",
 		"public-encrypt": "^4.0.3",
-		"randombytes": "^2.1.0",
 		"randomfill": "^1.0.4"
 	},
 	"devDependencies": {

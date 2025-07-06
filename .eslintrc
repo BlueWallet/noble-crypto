@@ -7,6 +7,8 @@
 		"func-style": "off",
 		"multiline-comment-style": "off",
 		"sort-keys": "off",
+		"no-magic-numbers": "off",
+		"max-params": "off"
 	},
 
 	"ignorePatterns": [

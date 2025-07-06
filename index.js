@@ -1,16 +1,16 @@
 'use strict';
 
 // eslint-disable-next-line no-multi-assign
-exports.randomBytes = exports.rng = exports.pseudoRandomBytes = exports.prng = require('randombytes');
+exports.randomBytes = exports.rng = exports.pseudoRandomBytes = exports.prng = function () {
+	throw new Error('Deprecated. Use Crypto.getRandomValues() - bring your own implementation for your runtime');
+};
 
 // eslint-disable-next-line no-multi-assign
-exports.createHash = exports.Hash = require('create-hash');
+exports.createHash = exports.Hash = require('./noble-hash-wrapper');
 
 // eslint-disable-next-line no-multi-assign
-exports.createHmac = exports.Hmac = require('create-hmac');
+exports.createHmac = exports.Hmac = require('./noble-hmac-wrapper');
 
-var algos = require('browserify-sign/algos');
-var algoKeys = Object.keys(algos);
 var hashes = [
 	'sha1',
 	'sha224',
@@ -19,17 +19,17 @@ var hashes = [
 	'sha512',
 	'md5',
 	'rmd160'
-].concat(algoKeys);
+];
 
 exports.getHashes = function () {
 	return hashes;
 };
 
-var p = require('pbkdf2');
+var p = require('./noble-pbkdf2-wrapper');
 exports.pbkdf2 = p.pbkdf2;
 exports.pbkdf2Sync = p.pbkdf2Sync;
 
-var aes = require('browserify-cipher');
+var aes = require('./noble-cipher-wrapper');
 
 exports.Cipher = aes.Cipher;
 exports.createCipher = aes.createCipher;
@@ -50,14 +50,14 @@ exports.getDiffieHellman = dh.getDiffieHellman;
 exports.createDiffieHellman = dh.createDiffieHellman;
 exports.DiffieHellman = dh.DiffieHellman;
 
-var sign = require('browserify-sign');
+var sign = require('./noble-sign-wrapper');
 
 exports.createSign = sign.createSign;
 exports.Sign = sign.Sign;
 exports.createVerify = sign.createVerify;
 exports.Verify = sign.Verify;
 
-exports.createECDH = require('create-ecdh');
+exports.createECDH = require('./noble-ecdh-wrapper');
 
 var publicEncrypt = require('public-encrypt');
 
@@ -75,10 +75,12 @@ exports.privateDecrypt = publicEncrypt.privateDecrypt;
 //   };
 // });
 
-var rf = require('randomfill');
-
-exports.randomFill = rf.randomFill;
-exports.randomFillSync = rf.randomFillSync;
+exports.randomFill = function () {
+	throw new Error('Deprecated. Use Crypto.getRandomValues() - bring your own implementation for your runtime');
+};
+exports.randomFillSync = function () {
+	throw new Error('Deprecated. Use Crypto.getRandomValues() - bring your own implementation for your runtime');
+};
 
 exports.createCredentials = function () {
 	throw new Error('sorry, createCredentials is not implemented yet\nwe accept pull requests\nhttps://github.com/browserify/crypto-browserify');
