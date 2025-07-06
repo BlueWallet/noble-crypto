@@ -1,6 +1,7 @@
 ## Incompatibilities
 
 * `randomBytes` is removed and will throw an exception. Bring your own CSPRNG for your runtime
+* `randomfill`
 
 # crypto-browserify <sup>[![Version Badge][npm-version-svg]][package-url]</sup>
 

@@ -75,10 +75,12 @@ exports.privateDecrypt = publicEncrypt.privateDecrypt;
 //   };
 // });
 
-var rf = require('randomfill');
-
-exports.randomFill = rf.randomFill;
-exports.randomFillSync = rf.randomFillSync;
+exports.randomFill = function () {
+	throw new Error('Deprecated. Use Crypto.getRandomValues() - bring your own implementation for your runtime');
+};
+exports.randomFillSync = function () {
+	throw new Error('Deprecated. Use Crypto.getRandomValues() - bring your own implementation for your runtime');
+};
 
 exports.createCredentials = function () {
 	throw new Error('sorry, createCredentials is not implemented yet\nwe accept pull requests\nhttps://github.com/browserify/crypto-browserify');
