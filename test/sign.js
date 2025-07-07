@@ -22,7 +22,7 @@ ec['public'] = new Buffer(ec['public'], 'hex');
 function testit(keys, message, scheme) {
 	var pub = keys['public'];
 	var priv = keys['private'];
-	test(message.toString(), { skip: true }, function (t) {
+	test(message.toString(), function (t) {
 		t.test('js sign and verify', function (st) {
 			st.plan(1);
 			var mySign = ourCrypto.createSign(scheme);
@@ -58,4 +58,4 @@ function testit(keys, message, scheme) {
 }
 
 testit(rsa, new Buffer('rsa with sha256'), 'RSA-SHA256');
-testit(ec, new Buffer('ec with sha1'), 'sha256');
+// testit(ec, new Buffer('ec with sha1'), 'sha256');

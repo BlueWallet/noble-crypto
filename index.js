@@ -50,21 +50,12 @@ exports.getDiffieHellman = dh.getDiffieHellman;
 exports.createDiffieHellman = dh.createDiffieHellman;
 exports.DiffieHellman = dh.DiffieHellman;
 
-exports.createSign = function () {
-	throw new Error('Not implemented');
-};
+var signVerify = require('./noble-sign-wrapper');
 
-exports.Sign = function () {
-	throw new Error('Not implemented');
-};
-
-exports.createVerify = function () {
-	throw new Error('Not implemented');
-};
-
-exports.Verify = function () {
-	throw new Error('Not implemented');
-};
+exports.createSign = signVerify.createSign;
+exports.Sign = signVerify.Sign;
+exports.createVerify = signVerify.createVerify;
+exports.Verify = signVerify.Verify;
 
 exports.createECDH = require('./noble-ecdh-wrapper');
 
