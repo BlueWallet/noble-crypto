@@ -1,7 +1,11 @@
+# noble-crypto
+
+`crypto-browserify` fork with all dependencies swapped for more modern `@noble` suite
+
 ## Incompatibilities
 
 * `randomBytes` is removed and will throw an exception. Bring your own CSPRNG for your runtime
-* `randomfill`
+* `randomfill` --//--
 * for `createECDH`, curves `secp224r1` & `prime192v1` are carved out (not supported in noble)
 
 # crypto-browserify <sup>[![Version Badge][npm-version-svg]][package-url]</sup>
