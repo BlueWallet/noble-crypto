@@ -1,7 +1,7 @@
 'use strict';
 
 var test = require('tape');
-var crypto = require('diffie-hellman/browser');
+var crypto = require('..');
 
 test('diffie-hellman mod groups', function (t) {
 	[
