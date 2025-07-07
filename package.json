@@ -24,7 +24,7 @@
 		"@noble/curves": "^1.9.2",
 		"@noble/hashes": "^1.8.0",
 		"micro-rsa-dsa-dh": "^0.1.0",
-		"public-encrypt": "^4.0.3"
+		"parse-asn1": "^5.1.7"
 	},
 	"devDependencies": {
 		"eslint": "=8.8.0",

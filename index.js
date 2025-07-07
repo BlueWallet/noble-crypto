@@ -59,12 +59,12 @@ exports.Verify = signVerify.Verify;
 
 exports.createECDH = require('./noble-ecdh-wrapper');
 
-const publicEncrypt = require('public-encrypt');
+const rsa = require('./noble-rsa-wrapper');
 
-exports.publicEncrypt = publicEncrypt.publicEncrypt;
-exports.privateEncrypt = publicEncrypt.privateEncrypt;
-exports.publicDecrypt = publicEncrypt.publicDecrypt;
-exports.privateDecrypt = publicEncrypt.privateDecrypt;
+exports.publicEncrypt = rsa.publicEncrypt;
+exports.privateEncrypt = rsa.privateEncrypt;
+exports.publicDecrypt = rsa.publicDecrypt;
+exports.privateDecrypt = rsa.privateDecrypt;
 
 // the least I can do is make error messages for the rest of the node.js/crypto api.
 // [
