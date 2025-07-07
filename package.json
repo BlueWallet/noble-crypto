@@ -1,20 +1,16 @@
 {
-	"author": "Dominic Tarr <dominic.tarr@gmail.com> (dominictarr.com)",
-	"name": "crypto-browserify",
+	"name": "noble-crypto",
 	"description": "implementation of crypto for the browser",
-	"version": "3.12.1",
-	"homepage": "https://github.com/browserify/crypto-browserify",
+	"version": "4.0.0",
+	"homepage": "https://github.com/BlueWallet/noble-crypto",
 	"sideEffects": false,
 	"repository": {
 		"type": "git",
-		"url": "git://github.com/browserify/crypto-browserify.git"
+		"url": "git://github.com/BlueWallet/noble-crypto.git"
 	},
 	"scripts": {
 		"lint": "eslint --ext=js,mjs .",
 		"test": "nyc tape 'test/**/*.js'"
-	},
-	"funding": {
-		"url": "https://github.com/sponsors/ljharb"
 	},
 	"engines": {
 		"node": ">= 0.10"
