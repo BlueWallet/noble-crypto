@@ -8,6 +8,11 @@
 * `randomfill` --//--
 * for `createECDH`, curves `secp224r1` & `prime192v1` are carved out (not supported in noble)
 
+## Todo
+
+* throw away `safe-buffer` in favor of Uint8Array
+* figure out what to do with `parse-asn1` dep
+
 # crypto-browserify <sup>[![Version Badge][npm-version-svg]][package-url]</sup>
 
 A port of node's `crypto` module to the browser.
