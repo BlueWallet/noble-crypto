@@ -11,7 +11,7 @@ exports.createHash = exports.Hash = require('./noble-hash-wrapper');
 // eslint-disable-next-line no-multi-assign
 exports.createHmac = exports.Hmac = require('./noble-hmac-wrapper');
 
-var hashes = [
+const hashes = [
 	'sha1',
 	'sha224',
 	'sha256',
@@ -25,11 +25,11 @@ exports.getHashes = function () {
 	return hashes;
 };
 
-var p = require('./noble-pbkdf2-wrapper');
+const p = require('./noble-pbkdf2-wrapper');
 exports.pbkdf2 = p.pbkdf2;
 exports.pbkdf2Sync = p.pbkdf2Sync;
 
-var aes = require('./noble-cipher-wrapper');
+const aes = require('./noble-cipher-wrapper');
 
 exports.Cipher = aes.Cipher;
 exports.createCipher = aes.createCipher;
@@ -42,7 +42,7 @@ exports.createDecipheriv = aes.createDecipheriv;
 exports.getCiphers = aes.getCiphers;
 exports.listCiphers = aes.listCiphers;
 
-var dh = require('./micro-dh-wrapper');
+const dh = require('./micro-dh-wrapper');
 
 exports.DiffieHellmanGroup = dh.DiffieHellmanGroup;
 exports.createDiffieHellmanGroup = dh.createDiffieHellmanGroup;
@@ -50,7 +50,7 @@ exports.getDiffieHellman = dh.getDiffieHellman;
 exports.createDiffieHellman = dh.createDiffieHellman;
 exports.DiffieHellman = dh.DiffieHellman;
 
-var signVerify = require('./noble-sign-wrapper');
+const signVerify = require('./noble-sign-wrapper');
 
 exports.createSign = signVerify.createSign;
 exports.Sign = signVerify.Sign;
@@ -59,7 +59,7 @@ exports.Verify = signVerify.Verify;
 
 exports.createECDH = require('./noble-ecdh-wrapper');
 
-var publicEncrypt = require('public-encrypt');
+const publicEncrypt = require('public-encrypt');
 
 exports.publicEncrypt = publicEncrypt.publicEncrypt;
 exports.privateEncrypt = publicEncrypt.privateEncrypt;

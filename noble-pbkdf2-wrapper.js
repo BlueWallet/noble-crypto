@@ -1,14 +1,12 @@
 'use strict';
 
-/* global Uint8Array */
-
-var noblePbkdf2 = require('@noble/hashes/pbkdf2');
-var sha1 = require('@noble/hashes/sha1');
-var sha2 = require('@noble/hashes/sha2');
-var legacy = require('@noble/hashes/legacy');
+const noblePbkdf2 = require('@noble/hashes/pbkdf2');
+const sha1 = require('@noble/hashes/sha1');
+const sha2 = require('@noble/hashes/sha2');
+const legacy = require('@noble/hashes/legacy');
 
 // Map digest names to noble hash functions
-var hashFunctions = {
+const hashFunctions = {
 	sha1: sha1.sha1,
 	sha224: sha2.sha224,
 	sha256: sha2.sha256,
@@ -34,20 +32,20 @@ function toUint8Array(data) {
 
 function pbkdf2Sync(password, salt, iterations, keylen, digest) {
 	// Default to sha1 if no digest specified
-	var hashName = digest || 'sha1';
+	const hashName = digest || 'sha1';
 
 	// Get the hash function
-	var hashFunction = hashFunctions[hashName];
+	const hashFunction = hashFunctions[hashName];
 	if (!hashFunction) {
 		throw new Error('Unsupported digest algorithm: ' + hashName);
 	}
 
 	// Convert inputs to Uint8Array
-	var passwordBytes = toUint8Array(password);
-	var saltBytes = toUint8Array(salt);
+	const passwordBytes = toUint8Array(password);
+	const saltBytes = toUint8Array(salt);
 
 	// Call noble PBKDF2
-	var result = noblePbkdf2.pbkdf2(hashFunction, passwordBytes, saltBytes, {
+	const result = noblePbkdf2.pbkdf2(hashFunction, passwordBytes, saltBytes, {
 		c: iterations,
 		dkLen: keylen
 	});
@@ -58,17 +56,17 @@ function pbkdf2Sync(password, salt, iterations, keylen, digest) {
 
 function pbkdf2(password, salt, iterations, keylen, digest, callback) {
 	// Default to sha1 if no digest specified
-	var hashName = digest || 'sha1';
+	const hashName = digest || 'sha1';
 
 	// Get the hash function
-	var hashFunction = hashFunctions[hashName];
+	const hashFunction = hashFunctions[hashName];
 	if (!hashFunction) {
 		callback(new Error('Unsupported digest algorithm: ' + hashName));
 		return;
 	}
 
 	// Convert inputs to Uint8Array
-	var passwordBytes, saltBytes;
+	let passwordBytes, saltBytes;
 	try {
 		passwordBytes = toUint8Array(password);
 		saltBytes = toUint8Array(salt);

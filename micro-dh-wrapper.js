@@ -1,10 +1,8 @@
 'use strict';
 
-var DHGroupsModule = require('micro-rsa-dsa-dh/dh.js');
-var DHGroups = DHGroupsModule.DHGroups;
-var Buffer = require('safe-buffer').Buffer;
-
-/* global window */
+const DHGroupsModule = require('micro-rsa-dsa-dh/dh.js');
+const DHGroups = DHGroupsModule.DHGroups;
+const Buffer = require('safe-buffer').Buffer;
 
 // Cross-platform random bytes function
 function getRandomBytes(buffer) {
@@ -21,14 +19,14 @@ function getRandomBytes(buffer) {
 
 // Convert bigint to Buffer with proper padding
 function bigintToBuffer(bigint, length) {
-	var hex = bigint.toString(16);
+	const hex = bigint.toString(16);
 	// Ensure even length by padding with leading zero if needed
-	var paddedHex = hex.length % 2 === 0 ? hex : '0' + hex;
-	var buffer = Buffer.from(paddedHex, 'hex');
+	const paddedHex = hex.length % 2 === 0 ? hex : '0' + hex;
+	const buffer = Buffer.from(paddedHex, 'hex');
 
 	if (length && buffer.length < length) {
 		// Pad with leading zeros to reach desired length
-		var pad = Buffer.alloc(length - buffer.length, 0);
+		const pad = Buffer.alloc(length - buffer.length, 0);
 		return Buffer.concat([pad, buffer]);
 	}
 
@@ -37,9 +35,9 @@ function bigintToBuffer(bigint, length) {
 
 // Helper function for BigInt power operation
 function bigintPow(base, exponent) {
-	var result = BigInt(1);
-	var localBase = BigInt(base);
-	var localExponent = BigInt(exponent);
+	let result = BigInt(1);
+	let localBase = BigInt(base);
+	let localExponent = BigInt(exponent);
 	while (localExponent > 0) {
 		if (localExponent % BigInt(2) === BigInt(1)) {
 			result = result * localBase;
@@ -57,9 +55,9 @@ function bufferToBigint(buffer) {
 
 // Modular exponentiation
 function modPow(base, exp, mod) {
-	var result = BigInt(1);
-	var localBase = base % mod;
-	var localExp = exp;
+	let result = BigInt(1);
+	let localBase = base % mod;
+	let localExp = exp;
 	while (localExp > BigInt(0)) {
 		if (localExp % BigInt(2) === BigInt(1)) {
 			result = (result * localBase) % mod;
@@ -72,12 +70,12 @@ function modPow(base, exp, mod) {
 
 // Miller-Rabin primality test helper
 function millerRabinTest(n, a, d, r) {
-	var x = modPow(a, d, n);
+	let x = modPow(a, d, n);
 	if (x === BigInt(1) || x === n - BigInt(1)) {
 		return true;
 	}
 
-	for (var i = 0; i < r - 1; i++) {
+	for (let i = 0; i < r - 1; i++) {
 		x = modPow(x, BigInt(2), n);
 		if (x === n - BigInt(1)) {
 			return true;
@@ -100,15 +98,15 @@ function isProbablePrime(n) {
 	}
 
 	// Miller-Rabin primality test (simplified)
-	var d = n - BigInt(1);
-	var r = 0;
+	let d = n - BigInt(1);
+	let r = 0;
 	while (d % BigInt(2) === BigInt(0)) {
 		d /= BigInt(2);
 		r = r + 1;
 	}
 
 	// Test with a few witnesses
-	var witnesses = [
+	const witnesses = [
 		BigInt(2),
 		BigInt(3),
 		BigInt(5),
@@ -122,8 +120,8 @@ function isProbablePrime(n) {
 		BigInt(31),
 		BigInt(37)
 	];
-	for (var i = 0; i < witnesses.length; i++) {
-		var a = witnesses[i];
+	for (let i = 0; i < witnesses.length; i++) {
+		const a = witnesses[i];
 		if (a < n) {
 			if (!millerRabinTest(n, a, d, r)) {
 				return false;
@@ -138,13 +136,13 @@ function isProbablePrime(n) {
 function generatePrime(bitLength) {
 	// Simple prime generation (not cryptographically secure, but sufficient for this demo)
 	// In production, you'd use a proper prime generation algorithm
-	var min = bigintPow(BigInt(2), BigInt(bitLength - 1));
-	var max = bigintPow(BigInt(2), BigInt(bitLength)) - BigInt(1);
+	const min = bigintPow(BigInt(2), BigInt(bitLength - 1));
+	const max = bigintPow(BigInt(2), BigInt(bitLength)) - BigInt(1);
 
 	// Generate random number in range
-	var candidate;
+	let candidate;
 	do {
-		var randomBytes = Buffer.allocUnsafe(Math.ceil(bitLength / 8));
+		const randomBytes = Buffer.allocUnsafe(Math.ceil(bitLength / 8));
 		getRandomBytes(randomBytes);
 		candidate = bufferToBigint(randomBytes);
 		candidate = (candidate % (max - min + BigInt(1))) + min;
@@ -163,9 +161,9 @@ function CustomDH(prime, generator) {
 
 CustomDH.prototype.randomPrivateKey = function () {
 	// Generate random private key in range [1, prime-1]
-	var keyBytes = Buffer.allocUnsafe(Math.ceil(this.prime.toString(16).length / 2));
+	const keyBytes = Buffer.allocUnsafe(Math.ceil(this.prime.toString(16).length / 2));
 	getRandomBytes(keyBytes);
-	var key = bufferToBigint(keyBytes);
+	let key = bufferToBigint(keyBytes);
 	key = (key % (this.prime - BigInt(1))) + BigInt(1);
 	return key;
 };
@@ -175,7 +173,7 @@ CustomDH.prototype.getPublicKey = function (privateKey) {
 };
 
 CustomDH.prototype.getSharedSecret = function (privateKey, otherPublicKey) {
-	var otherPubKeyBigint = typeof otherPublicKey === 'bigint' ? otherPublicKey : bufferToBigint(otherPublicKey);
+	const otherPubKeyBigint = typeof otherPublicKey === 'bigint' ? otherPublicKey : bufferToBigint(otherPublicKey);
 	return modPow(otherPubKeyBigint, privateKey, this.prime);
 };
 
@@ -190,16 +188,16 @@ function DiffieHellman(prime, generator) {
 		this.primeLength = Math.ceil(DHGroups[prime].p.toString(16).length / 2);
 	} else if (typeof prime === 'number') {
 		// Key length specified - generate prime of that length
-		var generatedPrime = generatePrime(prime);
-		var generatedGenerator = BigInt(2); // Use 2 as generator (safe for most primes)
+		const generatedPrime = generatePrime(prime);
+		const generatedGenerator = BigInt(2); // Use 2 as generator (safe for most primes)
 		this.customDH = new CustomDH(generatedPrime, generatedGenerator);
 		this.customPrime = generatedPrime;
 		this.customGenerator = generatedGenerator;
 		this.primeLength = Math.ceil(generatedPrime.toString(16).length / 2);
 	} else if (Buffer.isBuffer(prime)) {
 		// Custom prime provided
-		var primeBigint = bufferToBigint(prime);
-		var genBigint = BigInt(2); // Default generator
+		const primeBigint = bufferToBigint(prime);
+		let genBigint = BigInt(2); // Default generator
 		if (Buffer.isBuffer(generator)) {
 			genBigint = bufferToBigint(generator);
 		} else if (typeof generator === 'number') {
@@ -234,7 +232,7 @@ DiffieHellman.prototype.computeSecret = function (otherPublicKey, inputEncoding,
 	}
 
 	// Using custom DH implementation for all cases
-	var otherKeyInput;
+	let otherKeyInput;
 	if (Buffer.isBuffer(otherPublicKey)) {
 		otherKeyInput = otherPublicKey;
 	} else if (typeof otherPublicKey === 'string') {
@@ -245,8 +243,8 @@ DiffieHellman.prototype.computeSecret = function (otherPublicKey, inputEncoding,
 		throw new Error('Invalid public key type for computeSecret');
 	}
 
-	var sharedSecret = this.customDH.getSharedSecret(this.privateKey, otherKeyInput);
-	var result = bigintToBuffer(sharedSecret, this.primeLength);
+	const sharedSecret = this.customDH.getSharedSecret(this.privateKey, otherKeyInput);
+	const result = bigintToBuffer(sharedSecret, this.primeLength);
 
 	if (outputEncoding) {
 		return result.toString(outputEncoding);
@@ -259,7 +257,7 @@ DiffieHellman.prototype.getPrime = function (encoding) {
 		throw new Error('No prime available');
 	}
 
-	var result = bigintToBuffer(this.customPrime);
+	const result = bigintToBuffer(this.customPrime);
 	if (encoding) {
 		return result.toString(encoding);
 	}
@@ -271,7 +269,7 @@ DiffieHellman.prototype.getGenerator = function (encoding) {
 		throw new Error('No generator available');
 	}
 
-	var result = bigintToBuffer(this.customGenerator);
+	const result = bigintToBuffer(this.customGenerator);
 	if (encoding) {
 		return result.toString(encoding);
 	}
@@ -283,7 +281,7 @@ DiffieHellman.prototype.getPublicKey = function (encoding) {
 		throw new Error('Keys not generated. Call generateKeys() first.');
 	}
 
-	var result = bigintToBuffer(this.publicKey, this.primeLength);
+	const result = bigintToBuffer(this.publicKey, this.primeLength);
 
 	if (encoding) {
 		return result.toString(encoding);
@@ -296,7 +294,7 @@ DiffieHellman.prototype.getPrivateKey = function (encoding) {
 		throw new Error('Keys not generated. Call generateKeys() first.');
 	}
 
-	var result = bigintToBuffer(this.privateKey);
+	const result = bigintToBuffer(this.privateKey);
 	if (encoding) {
 		return result.toString(encoding);
 	}

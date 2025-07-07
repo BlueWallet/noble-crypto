@@ -1,23 +1,43 @@
 {
 	"root": true,
 
-	"extends": "@ljharb",
+	"extends": [
+		"eslint:recommended"
+	],
+
+	"env": {
+		"browser": true,
+		"node": true,
+		"es2020": true
+	},
+
+	"parserOptions": {
+		"ecmaVersion": 2020,
+		"sourceType": "module"
+	},
 
 	"rules": {
 		"func-style": "off",
 		"multiline-comment-style": "off",
 		"sort-keys": "off",
 		"no-magic-numbers": "off",
-		"max-params": "off"
+		"max-params": "off",
+		"indent": ["error", "tab"],
+		"quotes": ["error", "single"],
+		"semi": ["error", "always"],
+		"no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+		"no-console": "warn",
+		"prefer-const": "error",
+		"no-var": "error"
 	},
 
 	"ignorePatterns": [
-		"example/bundle.js",
+		"coverage/**",
 	],
 
 	"overrides": [
 		{
-			"files": "example/**",
+			"files": "test/**",
 			"rules": {
 				"no-console": "off",
 			},

@@ -1,13 +1,11 @@
 'use strict';
 
-/* global Uint8Array */
-
-var rsa = require('micro-rsa-dsa-dh/rsa.js');
-var parseASN1 = require('parse-asn1');
-var { p256 } = require('@noble/curves/p256');
-var { secp256k1 } = require('@noble/curves/secp256k1');
-var { sha1 } = require('@noble/hashes/sha1');
-var { sha256 } = require('@noble/hashes/sha2');
+const rsa = require('micro-rsa-dsa-dh/rsa.js');
+const parseASN1 = require('parse-asn1');
+const { p256 } = require('@noble/curves/p256');
+const { secp256k1 } = require('@noble/curves/secp256k1');
+const { sha1 } = require('@noble/hashes/sha1');
+const { sha256 } = require('@noble/hashes/sha2');
 
 // Helper function to convert Buffer/string to Uint8Array
 function toUint8Array(data) {
@@ -26,14 +24,14 @@ function toUint8Array(data) {
 // Use parse-asn1 to parse keys reliably
 function parseKey(keyData) {
 	try {
-		var parsed = parseASN1(keyData);
+		const parsed = parseASN1(keyData);
 		
 		// Check if it's an RSA key (has modulus)
 		if (parsed.modulus) {
 			// RSA key
-			var n = parsed.modulus;
-			var e = parsed.publicExponent;
-			var d = parsed.privateExponent;
+			const n = parsed.modulus;
+			const e = parsed.publicExponent;
+			const d = parsed.privateExponent;
 			
 			if (!n) {
 				throw new Error('Missing modulus');
@@ -43,12 +41,12 @@ function parseKey(keyData) {
 			}
 			
 			// Convert to BigInt format expected by micro-rsa-dsa-dh
-			var nBig = BigInt('0x' + n.toString('hex'));
-			var eBig = BigInt('0x' + e.toString('hex'));
+			const nBig = BigInt('0x' + n.toString('hex'));
+			const eBig = BigInt('0x' + e.toString('hex'));
 			
 			if (d) {
 				// Private key
-				var dBig = BigInt('0x' + d.toString('hex'));
+				const dBig = BigInt('0x' + d.toString('hex'));
 				return {
 					type: 'rsa',
 					n: nBig, e: eBig, d: dBig
@@ -61,10 +59,10 @@ function parseKey(keyData) {
 			};
 		} else if (parsed.privateKey && parsed.curve) {
 			// EC private key - convert OID to curve name
-			var curveName = 'prime256v1'; // default
+			let curveName = 'prime256v1'; // default
 			if (Array.isArray(parsed.curve)) {
 				// OID [1, 3, 132, 0, 10] = secp256k1
-				var oidStr = parsed.curve.join('.');
+				const oidStr = parsed.curve.join('.');
 				if (oidStr === '1.3.132.0.10') {
 					curveName = 'secp256k1';
 				} else if (oidStr === '1.2.840.10045.3.1.7') {
@@ -79,9 +77,9 @@ function parseKey(keyData) {
 			};
 		} else if (parsed.type === 'ec' && parsed.data && parsed.data.subjectPublicKey) {
 			// EC public key with full structure
-			var curveName = 'prime256v1'; // default
+			let curveName = 'prime256v1'; // default
 			if (parsed.data.algorithm && parsed.data.algorithm.curve && Array.isArray(parsed.data.algorithm.curve)) {
-				var oidStr = parsed.data.algorithm.curve.join('.');
+				const oidStr = parsed.data.algorithm.curve.join('.');
 				if (oidStr === '1.3.132.0.10') {
 					curveName = 'secp256k1';
 				} else if (oidStr === '1.2.840.10045.3.1.7') {
@@ -103,7 +101,7 @@ function parseKey(keyData) {
 }
 
 // Map algorithm names to signers and hash functions
-var algorithms = {
+const algorithms = {
 	// RSA algorithms
 	'RSA-SHA1': { type: 'rsa', signer: rsa.PKCS1_SHA1 },
 	'RSA-SHA256': { type: 'rsa', signer: rsa.PKCS1_SHA256 },
@@ -134,7 +132,7 @@ Sign.prototype.update = function (data, encoding) {
 		throw new Error('Cannot update after sign has been called');
 	}
 
-	var uint8Data;
+	let uint8Data;
 	if (encoding) {
 		if (encoding === 'hex') {
 			uint8Data = new Uint8Array(Buffer.from(data, 'hex'));
@@ -157,27 +155,27 @@ Sign.prototype.sign = function (privateKey, encoding) {
 	}
 	
 	// Concatenate all data
-	var totalLength = 0;
-	for (var i = 0; i < this.data.length; i++) {
+	let totalLength = 0;
+	for (let i = 0; i < this.data.length; i++) {
 		totalLength += this.data[i].length;
 	}
-	var concatenated = new Uint8Array(totalLength);
-	var offset = 0;
-	for (var j = 0; j < this.data.length; j++) {
-		var chunk = this.data[j];
+	const concatenated = new Uint8Array(totalLength);
+	let offset = 0;
+	for (let j = 0; j < this.data.length; j++) {
+		const chunk = this.data[j];
 		concatenated.set(chunk, offset);
 		offset += chunk.length;
 	}
 	
 	// Parse private key
-	var keyData;
+	let keyData;
 	if (typeof privateKey === 'string' || privateKey instanceof Buffer) {
 		keyData = parseKey(privateKey);
 	} else {
 		throw new Error('Unsupported private key format');
 	}
 	
-	var signature;
+	let signature;
 	
 	if (this.algorithmInfo.type === 'rsa') {
 		// RSA signing
@@ -192,17 +190,17 @@ Sign.prototype.sign = function (privateKey, encoding) {
 		}
 		
 		// Hash the data
-		var hash = this.algorithmInfo.hash(concatenated);
+		const hash = this.algorithmInfo.hash(concatenated);
 		
 		// Choose the curve - for now default to p256
-		var curve = p256;
+		let curve = p256;
 		if (keyData.curve === 'secp256k1') {
 			curve = secp256k1;
 		}
 
 		
 		// Convert private key to hex string if it's a Buffer
-		var privKeyHex = keyData.privateKey;
+		let privKeyHex = keyData.privateKey;
 		if (Buffer.isBuffer(privKeyHex)) {
 			privKeyHex = privKeyHex.toString('hex');
 		}
@@ -240,7 +238,7 @@ Verify.prototype.update = function (data, encoding) {
 		throw new Error('Cannot update after verify has been called');
 	}
 
-	var uint8Data;
+	let uint8Data;
 	if (encoding) {
 		if (encoding === 'hex') {
 			uint8Data = new Uint8Array(Buffer.from(data, 'hex'));
@@ -263,20 +261,20 @@ Verify.prototype.verify = function (publicKey, signature, encoding) {
 	}
 	
 	// Concatenate all data
-	var totalLength = 0;
-	for (var i = 0; i < this.data.length; i++) {
+	let totalLength = 0;
+	for (let i = 0; i < this.data.length; i++) {
 		totalLength += this.data[i].length;
 	}
-	var concatenated = new Uint8Array(totalLength);
-	var offset = 0;
-	for (var j = 0; j < this.data.length; j++) {
-		var chunk = this.data[j];
+	const concatenated = new Uint8Array(totalLength);
+	let offset = 0;
+	for (let j = 0; j < this.data.length; j++) {
+		const chunk = this.data[j];
 		concatenated.set(chunk, offset);
 		offset += chunk.length;
 	}
 	
 	// Parse public key
-	var keyData;
+	let keyData;
 	if (typeof publicKey === 'string' || publicKey instanceof Buffer) {
 		keyData = parseKey(publicKey);
 	} else {
@@ -284,7 +282,7 @@ Verify.prototype.verify = function (publicKey, signature, encoding) {
 	}
 	
 	// Convert signature to Uint8Array
-	var sigData;
+	let sigData;
 	if (encoding === 'hex') {
 		sigData = new Uint8Array(Buffer.from(signature, 'hex'));
 	} else if (encoding === 'base64') {
@@ -293,7 +291,7 @@ Verify.prototype.verify = function (publicKey, signature, encoding) {
 		sigData = toUint8Array(signature);
 	}
 	
-	var result;
+	let result;
 	
 	if (this.algorithmInfo.type === 'rsa') {
 		// RSA verification
@@ -308,16 +306,16 @@ Verify.prototype.verify = function (publicKey, signature, encoding) {
 		}
 		
 		// Hash the data
-		var hash = this.algorithmInfo.hash(concatenated);
+		const hash = this.algorithmInfo.hash(concatenated);
 		
 		// Choose the curve - for now default to p256
-		var curve = p256;
+		let curve = p256;
 		if (keyData.curve === 'secp256k1') {
 			curve = secp256k1;
 		}
 		
 		// Convert public key to hex string if it's a Buffer
-		var pubKeyHex = keyData.publicKey;
+		let pubKeyHex = keyData.publicKey;
 		if (Buffer.isBuffer(pubKeyHex)) {
 			pubKeyHex = pubKeyHex.toString('hex');
 		} else if (pubKeyHex instanceof Uint8Array) {
@@ -326,19 +324,19 @@ Verify.prototype.verify = function (publicKey, signature, encoding) {
 		
 		// Verify with the curve
 		try {
-			var sig = curve.Signature.fromDER(sigData);
+			const sig = curve.Signature.fromDER(sigData);
 			
 			// Try verification with original signature
-			var verified = curve.verify(sig, hash, pubKeyHex);
+			let verified = curve.verify(sig, hash, pubKeyHex);
 			
 			// If verification fails, try signature malleability fix
 			// In ECDSA, both (r, s) and (r, n - s) are valid signatures
 			if (!verified) {
 				try {
 					// Create alternate signature with s' = n - s
-					var n = curve.CURVE.n;
-					var altS = n - sig.s;
-					var altSig = new curve.Signature(sig.r, altS);
+					const n = curve.CURVE.n;
+					const altS = n - sig.s;
+					const altSig = new curve.Signature(sig.r, altS);
 					verified = curve.verify(altSig, hash, pubKeyHex);
 				} catch (e) {
 					// If that also fails, the signature is genuinely invalid

@@ -1,12 +1,10 @@
 'use strict';
 
-/* global Uint8Array */
-
-var sha2 = require('@noble/hashes/sha2');
-var legacy = require('@noble/hashes/legacy');
+const sha2 = require('@noble/hashes/sha2');
+const legacy = require('@noble/hashes/legacy');
 
 // Map algorithm names to noble hash functions
-var hashFunctions = {
+const hashFunctions = {
 	sha1: legacy.sha1,
 	sha224: sha2.sha224,
 	sha256: sha2.sha256,
@@ -32,10 +30,10 @@ function toUint8Array(data) {
 
 // Helper function to convert Uint8Array to hex string
 function toHex(bytes) {
-	var result = '';
-	var hexBase = 16;
-	var padLength = 2;
-	for (var i = 0; i < bytes.length; i++) {
+	let result = '';
+	const hexBase = 16;
+	const padLength = 2;
+	for (let i = 0; i < bytes.length; i++) {
 		result += bytes[i].toString(hexBase).padStart(padLength, '0');
 	}
 	return result;
@@ -61,7 +59,7 @@ Hash.prototype.update = function (data, encoding) {
 		throw new Error('Digest already called');
 	}
 
-	var uint8Data;
+	let uint8Data;
 	if (encoding) {
 		// Handle encoding parameter
 		if (encoding === 'hex') {
@@ -85,20 +83,20 @@ Hash.prototype.digest = function (encoding) {
 	}
 
 	// Concatenate all data
-	var totalLength = 0;
-	for (var i = 0; i < this.data.length; i++) {
+	let totalLength = 0;
+	for (let i = 0; i < this.data.length; i++) {
 		totalLength += this.data[i].length;
 	}
-	var concatenated = new Uint8Array(totalLength);
-	var offset = 0;
-	for (var j = 0; j < this.data.length; j++) {
-		var chunk = this.data[j];
+	const concatenated = new Uint8Array(totalLength);
+	let offset = 0;
+	for (let j = 0; j < this.data.length; j++) {
+		const chunk = this.data[j];
 		concatenated.set(chunk, offset);
 		offset += chunk.length;
 	}
 
 	// Calculate hash
-	var result = this.hashFunction(concatenated);
+	const result = this.hashFunction(concatenated);
 	this.finalized = true;
 
 	// Return based on encoding
@@ -118,9 +116,9 @@ Hash.prototype.copy = function () {
 	if (this.finalized) {
 		throw new Error('Cannot copy after digest');
 	}
-	var newHash = new Hash(this.algorithm);
+	const newHash = new Hash(this.algorithm);
 	newHash.data = [];
-	for (var i = 0; i < this.data.length; i++) {
+	for (let i = 0; i < this.data.length; i++) {
 		newHash.data.push(new Uint8Array(this.data[i]));
 	}
 	return newHash;

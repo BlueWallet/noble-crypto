@@ -1,11 +1,11 @@
 'use strict';
 
-var secp256k1 = require('@noble/curves/secp256k1');
-var nist = require('@noble/curves/nist');
-var Buffer = require('safe-buffer').Buffer;
+const secp256k1 = require('@noble/curves/secp256k1');
+const nist = require('@noble/curves/nist');
+const Buffer = require('safe-buffer').Buffer;
 
 // Curve name mapping
-var curveMap = {
+const curveMap = {
 	secp256k1: secp256k1.secp256k1,
 	secp224r1: null, // Not available in noble
 	prime256v1: nist.p256,
@@ -35,7 +35,7 @@ ECDH.prototype.getPrivateKey = function (encoding) {
 		throw new Error('Private key not set');
 	}
 
-	var key = Buffer.from(this.privateKey);
+	const key = Buffer.from(this.privateKey);
 	return encoding === 'hex' ? key.toString('hex') : key;
 };
 
@@ -49,7 +49,7 @@ ECDH.prototype.getPublicKey = function (encoding, format) {
 		throw new Error('Unsupported format: ' + format);
 	}
 
-	var key;
+	let key;
 	if (format === 'compressed') {
 		key = Buffer.from(this.curve.getPublicKey(this.privateKey, true));
 	} else {
@@ -61,7 +61,7 @@ ECDH.prototype.getPublicKey = function (encoding, format) {
 };
 
 ECDH.prototype.setPrivateKey = function (privateKey) {
-	var key;
+	let key;
 	if (typeof privateKey === 'string') {
 		key = Buffer.from(privateKey, 'hex');
 	} else {
@@ -69,7 +69,7 @@ ECDH.prototype.setPrivateKey = function (privateKey) {
 	}
 
 	// Validate private key
-	var expectedLength = this.curve.CURVE.n.toString(16).length / 2;
+	const expectedLength = this.curve.CURVE.n.toString(16).length / 2;
 	if (key.length !== expectedLength) {
 		throw new Error('Invalid private key length: expected ' + expectedLength + ', got ' + key.length);
 	}
@@ -80,7 +80,7 @@ ECDH.prototype.setPrivateKey = function (privateKey) {
 };
 
 ECDH.prototype.setPublicKey = function (publicKey) {
-	var key;
+	let key;
 	if (typeof publicKey === 'string') {
 		key = Buffer.from(publicKey, 'hex');
 	} else {
@@ -103,7 +103,7 @@ ECDH.prototype.computeSecret = function (otherPublicKey) {
 		throw new Error('Private key not set');
 	}
 
-	var otherKey;
+	let otherKey;
 	if (typeof otherPublicKey === 'string') {
 		otherKey = Buffer.from(otherPublicKey, 'hex');
 	} else {
@@ -111,7 +111,7 @@ ECDH.prototype.computeSecret = function (otherPublicKey) {
 	}
 
 	try {
-		var sharedSecret = this.curve.getSharedSecret(this.privateKey, otherKey);
+		const sharedSecret = this.curve.getSharedSecret(this.privateKey, otherKey);
 		// Remove the prefix (first byte) from the shared secret
 		return Buffer.from(sharedSecret.slice(1));
 	} catch (e) {
