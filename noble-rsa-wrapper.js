@@ -84,10 +84,20 @@ function privateDecrypt(key, buffer) {
 		
 		const privateKey = { n: parsedKey.n, d: parsedKey.d };
 		
+		// Calculate expected ciphertext length
+		const k = Math.ceil(parsedKey.n.toString(16).length / 2);
+		
+		// Handle case where ciphertext might be 1 byte shorter due to leading zero
+		let ciphertextBuffer = buffer;
+		if (buffer.length === k - 1) {
+			// Pad with leading zero to match expected length
+			ciphertextBuffer = Buffer.concat([Buffer.alloc(1, 0), buffer]);
+		}
+		
 		// Use OAEP padding by default (for compatibility with public-encrypt module)
 		// Node.js uses SHA-1 by default for OAEP
 		const oaep = OAEP(sha1, mgf1(sha1));
-		const decrypted = oaep.decrypt(privateKey, new Uint8Array(buffer));
+		const decrypted = oaep.decrypt(privateKey, new Uint8Array(ciphertextBuffer));
 		
 		return Buffer.from(decrypted);
 	} catch (error) {
