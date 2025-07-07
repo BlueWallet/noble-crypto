@@ -327,7 +327,26 @@ Verify.prototype.verify = function (publicKey, signature, encoding) {
 		// Verify with the curve
 		try {
 			var sig = curve.Signature.fromDER(sigData);
-			result = curve.verify(sig, hash, pubKeyHex);
+			
+			// Try verification with original signature
+			var verified = curve.verify(sig, hash, pubKeyHex);
+			
+			// If verification fails, try signature malleability fix
+			// In ECDSA, both (r, s) and (r, n - s) are valid signatures
+			if (!verified) {
+				try {
+					// Create alternate signature with s' = n - s
+					var n = curve.CURVE.n;
+					var altS = n - sig.s;
+					var altSig = new curve.Signature(sig.r, altS);
+					verified = curve.verify(altSig, hash, pubKeyHex);
+				} catch (e) {
+					// If that also fails, the signature is genuinely invalid
+					verified = false;
+				}
+			}
+			
+			result = verified;
 		} catch (error) {
 			result = false;
 		}
