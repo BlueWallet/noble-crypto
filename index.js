@@ -11,7 +11,7 @@ exports.createHash = exports.Hash = require('./noble-hash-wrapper');
 // eslint-disable-next-line no-multi-assign
 exports.createHmac = exports.Hmac = require('./noble-hmac-wrapper');
 
-var hashes = [
+const hashes = [
 	'sha1',
 	'sha224',
 	'sha256',
@@ -25,11 +25,11 @@ exports.getHashes = function () {
 	return hashes;
 };
 
-var p = require('./noble-pbkdf2-wrapper');
+const p = require('./noble-pbkdf2-wrapper');
 exports.pbkdf2 = p.pbkdf2;
 exports.pbkdf2Sync = p.pbkdf2Sync;
 
-var aes = require('./noble-cipher-wrapper');
+const aes = require('./noble-cipher-wrapper');
 
 exports.Cipher = aes.Cipher;
 exports.createCipher = aes.createCipher;
@@ -42,7 +42,7 @@ exports.createDecipheriv = aes.createDecipheriv;
 exports.getCiphers = aes.getCiphers;
 exports.listCiphers = aes.listCiphers;
 
-var dh = require('./micro-dh-wrapper');
+const dh = require('./micro-dh-wrapper');
 
 exports.DiffieHellmanGroup = dh.DiffieHellmanGroup;
 exports.createDiffieHellmanGroup = dh.createDiffieHellmanGroup;
@@ -50,30 +50,21 @@ exports.getDiffieHellman = dh.getDiffieHellman;
 exports.createDiffieHellman = dh.createDiffieHellman;
 exports.DiffieHellman = dh.DiffieHellman;
 
-exports.createSign = function () {
-	throw new Error('Not implemented');
-};
+const signVerify = require('./noble-sign-wrapper');
 
-exports.Sign = function () {
-	throw new Error('Not implemented');
-};
-
-exports.createVerify = function () {
-	throw new Error('Not implemented');
-};
-
-exports.Verify = function () {
-	throw new Error('Not implemented');
-};
+exports.createSign = signVerify.createSign;
+exports.Sign = signVerify.Sign;
+exports.createVerify = signVerify.createVerify;
+exports.Verify = signVerify.Verify;
 
 exports.createECDH = require('./noble-ecdh-wrapper');
 
-var publicEncrypt = require('public-encrypt');
+const rsa = require('./noble-rsa-wrapper');
 
-exports.publicEncrypt = publicEncrypt.publicEncrypt;
-exports.privateEncrypt = publicEncrypt.privateEncrypt;
-exports.publicDecrypt = publicEncrypt.publicDecrypt;
-exports.privateDecrypt = publicEncrypt.privateDecrypt;
+exports.publicEncrypt = rsa.publicEncrypt;
+exports.privateEncrypt = rsa.privateEncrypt;
+exports.publicDecrypt = rsa.publicDecrypt;
+exports.privateDecrypt = rsa.privateDecrypt;
 
 // the least I can do is make error messages for the rest of the node.js/crypto api.
 // [

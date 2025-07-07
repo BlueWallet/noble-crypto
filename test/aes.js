@@ -1,21 +1,21 @@
 'use strict';
 
-var test = require('tape');
-var bcCrypto = require('../noble-cipher-wrapper');
-var bcCyphers = bcCrypto.getCiphers();
-var randomBytes = require('pseudorandombytes');
+const test = require('tape');
+const bcCrypto = require('../noble-cipher-wrapper');
+const bcCyphers = bcCrypto.getCiphers();
+const randomBytes = require('pseudorandombytes');
 
-for (var i = 0; i < 4; i += 1) {
+for (let i = 0; i < 4; i += 1) {
 	bcCrypto.listCiphers().forEach(function (cipher) {
 		test('run: ' + i, function (t) {
 			/* eslint no-loop-func: 0 */
 			t.test('ciphers: ' + cipher, function (st) {
 				st.plan(1);
-				var data = randomBytes(562);
-				var password = randomBytes(20);
-				var crypter = bcCrypto.createCipher(cipher, password);
-				var decrypter = bcCrypto.createDecipher(cipher, password);
-				var out = [];
+				const data = randomBytes(562);
+				const password = randomBytes(20);
+				const crypter = bcCrypto.createCipher(cipher, password);
+				const decrypter = bcCrypto.createDecipher(cipher, password);
+				const out = [];
 				out.push(decrypter.update(crypter.update(data)));
 				out.push(decrypter.update(crypter['final']()));
 				if (cipher.indexOf('gcm') > -1) {
@@ -37,13 +37,13 @@ test('getCiphers', function (t) {
 // eslint-disable-next-line global-require
 test('through crypto browserify works', { skip: !require('crypto').createCipher && 'node 22+ removes createCipher' }, function (t) {
 	t.plan(2);
-	var crypto = require('../'); // eslint-disable-line global-require
-	var cipher = 'aes-128-ctr';
-	var data = randomBytes(562);
-	var password = randomBytes(20);
-	var crypter = crypto.createCipher(cipher, password);
-	var decrypter = crypto.createDecipher(cipher, password);
-	var out = [];
+	const crypto = require('../'); // eslint-disable-line global-require
+	const cipher = 'aes-128-ctr';
+	const data = randomBytes(562);
+	const password = randomBytes(20);
+	const crypter = crypto.createCipher(cipher, password);
+	const decrypter = crypto.createDecipher(cipher, password);
+	const out = [];
 	out.push(decrypter.update(crypter.update(data)));
 	out.push(decrypter.update(crypter['final']()));
 	out.push(decrypter['final']());

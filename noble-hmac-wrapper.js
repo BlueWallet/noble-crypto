@@ -1,13 +1,11 @@
 'use strict';
 
-/* global Uint8Array */
-
-var hmac = require('@noble/hashes/hmac').hmac;
-var sha2 = require('@noble/hashes/sha2');
-var legacy = require('@noble/hashes/legacy');
+const hmac = require('@noble/hashes/hmac').hmac;
+const sha2 = require('@noble/hashes/sha2');
+const legacy = require('@noble/hashes/legacy');
 
 // Map algorithm names to noble hash functions
-var hashFunctions = {
+const hashFunctions = {
 	sha1: legacy.sha1,
 	sha224: sha2.sha224,
 	sha256: sha2.sha256,
@@ -33,10 +31,10 @@ function toUint8Array(data) {
 
 // Helper function to convert Uint8Array to hex string
 function toHex(bytes) {
-	var result = '';
-	var hexBase = 16;
-	var padLength = 2;
-	for (var i = 0; i < bytes.length; i++) {
+	let result = '';
+	const hexBase = 16;
+	const padLength = 2;
+	for (let i = 0; i < bytes.length; i++) {
 		result += bytes[i].toString(hexBase).padStart(padLength, '0');
 	}
 	return result;
@@ -55,7 +53,7 @@ function Hmac(algorithm, key, encoding) {
 	}
 
 	// Node's createHmac allows key to be a string with encoding
-	var keyBuf;
+	let keyBuf;
 	if (typeof key === 'string') {
 		// If encoding is not provided, default to 'utf8' (Node's default)
 		keyBuf = Buffer.from(key, encoding || 'utf8');
@@ -77,7 +75,7 @@ Hmac.prototype.update = function (data, encoding) {
 		throw new Error('Digest already called');
 	}
 
-	var uint8Data;
+	let uint8Data;
 	if (encoding) {
 		// Handle encoding parameter
 		if (encoding === 'hex') {
@@ -101,7 +99,7 @@ Hmac.prototype.digest = function (encoding) {
 	}
 
 	// Calculate HMAC
-	var result = this.hmacInstance.digest();
+	const result = this.hmacInstance.digest();
 	this.finalized = true;
 
 	// Return based on encoding
@@ -121,7 +119,7 @@ Hmac.prototype.copy = function () {
 	if (this.finalized) {
 		throw new Error('Cannot copy after digest');
 	}
-	var newHmac = new Hmac(this.algorithm, Buffer.from(this.hmacInstance.cloneInto().iHash.digest()));
+	const newHmac = new Hmac(this.algorithm, Buffer.from(this.hmacInstance.cloneInto().iHash.digest()));
 	newHmac.hmacInstance = this.hmacInstance.clone();
 	return newHmac;
 };

@@ -1,13 +1,11 @@
 'use strict';
 
-/* global Uint8Array */
-
-var aes = require('@noble/ciphers/aes');
-var utils = require('@noble/ciphers/utils');
-var sha256 = require('@noble/hashes/sha256');
+const aes = require('@noble/ciphers/aes');
+const utils = require('@noble/ciphers/utils');
+const sha256 = require('@noble/hashes/sha256');
 
 // Map cipher names to noble AES functions
-var cipherMap = {
+const cipherMap = {
 	// AES modes
 	'aes-128-ecb': { fn: aes.ecb, keySize: 16 },
 	'aes-192-ecb': { fn: aes.ecb, keySize: 24 },
@@ -63,18 +61,18 @@ function toBuffer(data) {
 
 // Helper function to derive key from password
 function deriveKey(password, salt, keySize) {
-	var passwordBytes = toUint8Array(password);
-	var saltBytes = toUint8Array(salt);
+	const passwordBytes = toUint8Array(password);
+	const saltBytes = toUint8Array(salt);
 
 	// Simple key derivation - in real usage you'd want PBKDF2
-	var hash = sha256.sha256(utils.concatBytes(passwordBytes, saltBytes));
+	const hash = sha256.sha256(utils.concatBytes(passwordBytes, saltBytes));
 	return hash.slice(0, keySize);
 }
 
 // Helper function to generate IV
 function generateIV(ivSize) {
-	var iv = new Uint8Array(ivSize);
-	for (var i = 0; i < ivSize; i++) {
+	const iv = new Uint8Array(ivSize);
+	for (let i = 0; i < ivSize; i++) {
 		iv[i] = Math.floor(Math.random() * 256);
 	}
 	return iv;
@@ -119,20 +117,20 @@ function Cipher(algorithm, password) {
 }
 
 Cipher.prototype.update = function (data) {
-	var dataBytes = toUint8Array(data);
+	const dataBytes = toUint8Array(data);
 	this.encrypted.push(dataBytes);
 	return Buffer.alloc(0); // No output until final
 };
 
 Cipher.prototype['final'] = function () {
-	var input = Buffer.concat(this.encrypted.map(toBuffer));
-	var result;
-	var output;
+	const input = Buffer.concat(this.encrypted.map(toBuffer));
+	let result;
+	let output;
 	if (this.isGcm) {
-		var encResult = this.cipher.encrypt(input);
-		var tagLen = 16;
-		var ciphertext = encResult.slice(0, -tagLen);
-		var tag = encResult.slice(-tagLen);
+		const encResult = this.cipher.encrypt(input);
+		const tagLen = 16;
+		const ciphertext = encResult.slice(0, -tagLen);
+		const tag = encResult.slice(-tagLen);
 		this.authTag = Buffer.from(tag);
 		output = Buffer.concat([
 			Buffer.from(this.salt), Buffer.from(this.iv), Buffer.from(ciphertext)
@@ -182,8 +180,8 @@ function Cipheriv(algorithm, key, iv) {
 }
 
 Cipheriv.prototype.update = function (data) {
-	var dataBytes = toUint8Array(data);
-	var result;
+	const dataBytes = toUint8Array(data);
+	let result;
 
 	if (this.isEcb) {
 		result = this.cipher.encrypt(dataBytes);
@@ -196,7 +194,7 @@ Cipheriv.prototype.update = function (data) {
 };
 
 Cipheriv.prototype['final'] = function () {
-	var result = Buffer.concat(this.encrypted.map(toBuffer));
+	const result = Buffer.concat(this.encrypted.map(toBuffer));
 
 	if (this.isGcm) {
 		this.authTag = toBuffer(this.cipher.tag);
@@ -231,40 +229,40 @@ function Decipher(algorithm, password) {
 }
 
 Decipher.prototype.update = function (data) {
-	var dataBytes = toUint8Array(data);
+	const dataBytes = toUint8Array(data);
 	this.decrypted.push(dataBytes);
 	return Buffer.alloc(0); // No output until final
 };
 
 Decipher.prototype['final'] = function () {
-	var input = Buffer.concat(this.decrypted.map(toBuffer));
+	const input = Buffer.concat(this.decrypted.map(toBuffer));
 	// For first call, extract salt and IV, derive key, and initialize cipher
 	if (!this.cipher) {
 		this.salt = input.slice(0, 16);
 		if (this.isGcm) {
 			this.iv = input.slice(16, 28);
 			this.key = deriveKey(this.password, this.salt, this.keySize);
-			var gcmCipherData = input.slice(28);
+			const gcmCipherData = input.slice(28);
 			if (!this.authTag) {
 				throw new Error('GCM: authTag must be set before final');
 			}
 			this.cipher = this.cipherInfo.fn(this.key, this.iv);
-			var gcmCiphertextWithTag = Buffer.concat([gcmCipherData, this.authTag]);
-			var gcmResult = this.cipher.decrypt(gcmCiphertextWithTag);
+			const gcmCiphertextWithTag = Buffer.concat([gcmCipherData, this.authTag]);
+			const gcmResult = this.cipher.decrypt(gcmCiphertextWithTag);
 			return toBuffer(gcmResult);
 		}
 		this.iv = this.isEcb ? null : input.slice(16, 32);
 		this.key = deriveKey(this.password, this.salt, this.keySize);
-		var blockCipherData = input.slice(this.isEcb ? 16 : 32);
+		const blockCipherData = input.slice(this.isEcb ? 16 : 32);
 		if (this.isEcb) {
 			this.cipher = this.cipherInfo.fn(this.key);
 		} else {
 			this.cipher = this.cipherInfo.fn(this.key, this.iv);
 		}
-		var blockResult = this.cipher.decrypt(blockCipherData);
+		const blockResult = this.cipher.decrypt(blockCipherData);
 		return toBuffer(blockResult);
 	}
-	var result = this.cipher.decrypt(input);
+	const result = this.cipher.decrypt(input);
 	return toBuffer(result);
 };
 
@@ -301,14 +299,14 @@ function Decipheriv(algorithm, key, iv) {
 }
 
 Decipheriv.prototype.update = function (data) {
-	var dataBytes = toUint8Array(data);
-	var result = this.cipher.decrypt(dataBytes);
+	const dataBytes = toUint8Array(data);
+	const result = this.cipher.decrypt(dataBytes);
 	this.decrypted.push(result);
 	return toBuffer(result);
 };
 
 Decipheriv.prototype['final'] = function () {
-	var result = Buffer.concat(this.decrypted.map(toBuffer));
+	const result = Buffer.concat(this.decrypted.map(toBuffer));
 	return result;
 };
 
